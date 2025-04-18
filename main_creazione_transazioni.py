@@ -24,9 +24,7 @@ def get_token():
     return json.loads(response.text)["access_token"]
 
 
-def call_api(token, debtor_account_number, creditor_account_number, amount):
-
-    accounting_date = datetime.datetime.today().strftime("%Y-%m-%d")
+def call_api(token, debtor_account_number, creditor_account_number, amount, accounting_date):
 
     payload = {
         "subledgerId": "c7bb004f-7e44-4127-a54e-9cb4fd487d46",
@@ -91,7 +89,10 @@ def main():
             [acc for acc in accounts if acc != debtor_account]
         )
 
-        transaction = (debtor_account, creditor_account, random.randint(1000, 450000))
+        amount = random.randint(1000, 450000)
+        accounting_date = datetime.date.today() + datetime.timedelta(days=random.randint(1, 15))
+
+        transaction = (debtor_account, creditor_account, amount, accounting_date.isoformat())
 
         call_api(token, *transaction)
 
